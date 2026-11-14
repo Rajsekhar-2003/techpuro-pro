@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ seo.title }}</title>
+<meta name="description" content="{{ seo.description }}">
+<meta name="robots" content="{{ seo.robots }}">
+<link rel="canonical" href="{{ seo.canonical }}">
+<meta property="og:site_name" content="{{ site_name }}">
+<meta property="og:type" content="{{ seo.og_type }}">
+<meta property="og:title" content="{{ seo.title }}">
+<meta property="og:description" content="{{ seo.description }}">
+<meta property="og:url" content="{{ seo.canonical }}">
+<meta property="og:image" content="{{ seo.og_image }}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ seo.title }}">
+<meta name="twitter:description" content="{{ seo.description }}">
+<meta name="twitter:image" content="{{ seo.og_image }}">
+<link rel="icon" href="{{ url_for('static', filename='favicon/favicon.svg') }}" type="image/svg+xml">
+<link rel="stylesheet" href="{{ url_for('static', filename='vendor/bootstrap/bootstrap.min.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='vendor/bootstrap-icons/bootstrap-icons.min.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+{% for l in seo.ld %}<script type="application/ld+json">{{ l|tojson }}</script>
+{% endfor %}
+</head>
+<body>
+<a class="visually-hidden-focusable" href="#main">Skip to content</a>
+<header class="tp-header sticky-top">
+<nav class="navbar navbar-expand-lg">
+  <div class="container">
+    <a class="navbar-brand" href="/"><img src="{{ url_for('static', filename='logo/logo.svg') }}" alt="TechPuro" width="140" height="32"></a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav" aria-controls="nav" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+    <div class="collapse navbar-collapse" id="nav">
+      <ul class="navbar-nav me-auto">
+        {% for slug, c in categories.items() %}
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">{{ c.name }}</a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item fw-semibold" href="/{{ slug }}/">All {{ c.name }}</a></li>
+            {% if menu[slug] %}<li><hr class="dropdown-divider"></li>{% endif %}
+            {% for m in menu[slug] %}<li><a class="dropdown-item text-truncate" href="{{ m.url }}">{{ m.title }}</a></li>{% endfor %}
+          </ul>
+        </li>
+        {% endfor %}
+      </ul>
+      <form class="d-flex" role="search" action="/search/" method="get">
+        <input class="form-control" type="search" name="q" maxlength="80" placeholder="Search articles" aria-label="Search" value="{{ q or '' }}">
+        <button class="btn btn-accent ms-2" type="submit" aria-label="Search"><i class="bi bi-search"></i></button>
+      </form>
+    </div>
+  </div>
+</nav>
+</header>
+<main id="main">{% block content %}{% endblock %}</main>
+<footer class="tp-footer mt-5">
+  <div class="container py-5">
+    <div class="row g-4">
+      <div class="col-lg-5">
+        <img src="{{ url_for('static', filename='logo/logo.svg') }}" alt="TechPuro" width="140" height="32" class="mb-3 tp-logo-inv">
+        <p class="small">An independent technology publication covering AI, programming, software, guides and the technology industry.</p>
+      </div>
+      <div class="col-6 col-lg-3"><h2 class="h6 text-uppercase">Topics</h2>
+        <ul class="list-unstyled small">{% for slug, c in categories.items() %}<li><a href="/{{ slug }}/">{{ c.name }}</a></li>{% endfor %}</ul></div>
+      <div class="col-6 col-lg-4"><h2 class="h6 text-uppercase">Site</h2>
+        <ul class="list-unstyled small"><li><a href="/about/">About</a></li><li><a href="/contact/">Contact</a></li><li><a href="/privacy-policy/">Privacy Policy</a></li><li><a href="/disclaimer/">Disclaimer</a></li><li><a href="/search/">Search</a></li><li><a href="/sitemap.xml">Sitemap</a></li></ul></div>
+    </div>
+    <hr><p class="small mb-0">© {{ year }} {{ site_name }}. All rights reserved.</p>
+  </div>
+</footer>
+<script src="{{ url_for('static', filename='vendor/bootstrap/bootstrap.bundle.min.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
+</body>
+</html>

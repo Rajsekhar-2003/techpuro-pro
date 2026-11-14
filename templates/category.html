@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% from "_macros.html" import card with context %}
+{% block content %}
+<div class="container">
+  <nav aria-label="breadcrumb" class="mt-4"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="/">Home</a></li><li class="breadcrumb-item active" aria-current="page">{{ info.name }}</li></ol></nav>
+  <h1 class="tp-serif"><i class="bi {{ info.icon }} me-2 text-accent"></i>{{ info.name }}</h1>
+  <p class="lead text-secondary">{{ info.desc }}</p>
+  {% if items %}
+  <div class="row g-4 my-2">{% for a in items %}<div class="col-md-6 col-lg-4">{{ card(a) }}</div>{% endfor %}</div>
+  {% else %}<p class="alert alert-light border">No published articles in this category yet.</p>{% endif %}
+  {% if pages > 1 %}
+  <nav aria-label="Pagination" class="mt-4"><ul class="pagination justify-content-center">
+    {% for p in range(1, pages + 1) %}<li class="page-item {{ 'active' if p == page }}"><a class="page-link" href="{{ base if p == 1 else base ~ '?page=' ~ p }}">{{ p }}</a></li>{% endfor %}
+  </ul></nav>{% endif %}
+</div>
+{% endblock %}

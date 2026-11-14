@@ -1,0 +1,14 @@
+{% macro card(a) %}
+<article class="card tp-card h-100">
+  <a href="{{ a.url }}" class="tp-thumb" tabindex="-1" aria-hidden="true">
+    {% if a.image %}<img src="{{ a.image }}" alt="" loading="lazy" width="800" height="450" class="card-img-top">
+    {% else %}<div class="tp-ph tp-{{ a.cat }}"><i class="bi {{ categories[a.cat].icon }}"></i></div>{% endif %}
+  </a>
+  <div class="card-body">
+    <a class="tp-kicker" href="/{{ a.cat }}/">{{ a.category_name }}</a>
+    <h3 class="h5 card-title mt-1"><a href="{{ a.url }}" class="stretched-link">{{ a.title }}</a></h3>
+    <p class="card-text text-secondary small mb-0">{{ a.description }}</p>
+  </div>
+  <div class="card-footer bg-transparent border-0 small text-secondary">{{ a.published|datefmt }} · {{ a.reading_time }} min read</div>
+</article>
+{% endmacro %}

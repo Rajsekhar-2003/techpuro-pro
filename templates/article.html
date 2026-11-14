@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% from "_macros.html" import card with context %}
+{% block content %}
+<div class="container">
+  <nav aria-label="breadcrumb" class="mt-4"><ol class="breadcrumb">
+    {% for name, url in crumbs %}{% if loop.last %}<li class="breadcrumb-item active text-truncate" aria-current="page">{{ name }}</li>
+    {% else %}<li class="breadcrumb-item"><a href="{{ url }}">{{ name }}</a></li>{% endif %}{% endfor %}
+  </ol></nav>
+  <div class="row g-5">
+    <article class="col-lg-8">
+      <a class="tp-kicker" href="/{{ a.cat }}/">{{ a.category_name }}</a>{% if a.subcategory %}<span class="small text-secondary"> / {{ a.subcategory }}</span>{% endif %}
+      <h1 class="tp-serif display-6 mt-2">{{ a.title }}</h1>
+      <p class="lead text-secondary">{{ a.description }}</p>
+      <p class="small text-secondary border-top border-bottom py-2">
+        <i class="bi bi-person"></i> {{ a.author }} ·
+        <i class="bi bi-calendar3"></i> Published <time datetime="{{ a.published.isoformat() }}">{{ a.published|datefmt }}</time>
+        {% if a.updated != a.published %}· Updated <time datetime="{{ a.updated.isoformat() }}">{{ a.updated|datefmt }}</time>{% endif %}
+        · {{ a.reading_time }} min read</p>
+      {% if a.image %}<img src="{{ a.image }}" alt="{{ a.image_alt }}" class="img-fluid rounded-3 mb-4" width="1200" height="675">{% endif %}
+
+      {% if a.toc %}<details class="tp-toc-m d-lg-none mb-4"><summary>Table of contents</summary>
+        <ul>{% for t in a.toc %}<li class="lvl{{ t.level }}"><a href="#{{ t.id }}">{{ t.name }}</a></li>{% endfor %}</ul></details>{% endif %}
+
+      {% if a.takeaways %}<aside class="tp-takeaways mb-4"><h2 class="h5"><i class="bi bi-lightbulb"></i> Key takeaways</h2>
+        <ul class="mb-0">{% for t in a.takeaways %}<li>{{ t }}</li>{% endfor %}</ul></aside>{% endif %}
+
+      <div class="article-body">{{ a.html|safe }}</div>
+
+      {% if a.faq %}<section class="mt-5"><h2 class="tp-h2" id="faq">Frequently asked questions</h2>
+        <div class="accordion" id="faqAcc">{% for f in a.faq %}
+          <div class="accordion-item"><h3 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#f{{ loop.index }}">{{ f.q }}</button></h3>
+          <div id="f{{ loop.index }}" class="accordion-collapse collapse" data-bs-parent="#faqAcc"><div class="accordion-body">{{ f.a }}</div></div></div>{% endfor %}
+        </div></section>{% endif %}
+
+      {% if a.references %}<section class="mt-5"><h2 class="tp-h2" id="references">References and sources</h2>
+        <ul>{% for r in a.references %}<li><a href="{{ r.url }}" target="_blank" rel="noopener noreferrer">{{ r.title }}</a></li>{% endfor %}</ul></section>{% endif %}
+
+      <section class="mt-5 d-flex flex-wrap gap-2 align-items-center"><strong class="small me-2">Share</strong>
+        {% set u = a.canonical|urlencode %}{% set t = a.title|urlencode %}
+        <a class="btn btn-sm btn-outline-secondary" target="_blank" rel="noopener" href="https://twitter.com/intent/tweet?url={{ u }}&text={{ t }}" aria-label="Share on X"><i class="bi bi-twitter-x"></i></a>
+        <a class="btn btn-sm btn-outline-secondary" target="_blank" rel="noopener" href="https://www.linkedin.com/sharing/share-offsite/?url={{ u }}" aria-label="Share on LinkedIn"><i class="bi bi-linkedin"></i></a>
+        <a class="btn btn-sm btn-outline-secondary" target="_blank" rel="noopener" href="https://www.facebook.com/sharer/sharer.php?u={{ u }}" aria-label="Share on Facebook"><i class="bi bi-facebook"></i></a>
+        <a class="btn btn-sm btn-outline-secondary" target="_blank" rel="noopener" href="https://wa.me/?text={{ t }}%20{{ u }}" aria-label="Share on WhatsApp"><i class="bi bi-whatsapp"></i></a>
+        <button class="btn btn-sm btn-outline-secondary" type="button" data-copy="{{ a.canonical }}"><i class="bi bi-link-45deg"></i> Copy link</button>
+      </section>
+    </article>
+    <aside class="col-lg-4 d-none d-lg-block">
+      {% if a.toc %}<div class="tp-toc sticky-top"><h2 class="h6 text-uppercase">On this page</h2>
+        <ul class="list-unstyled">{% for t in a.toc %}<li class="lvl{{ t.level }}"><a href="#{{ t.id }}">{{ t.name }}</a></li>{% endfor %}</ul></div>{% endif %}
+    </aside>
+  </div>
+  {% if related %}<section class="mt-5"><h2 class="tp-h2">Related articles</h2>
+    <div class="row g-4">{% for r in related %}<div class="col-md-6 col-lg-4">{{ card(r) }}</div>{% endfor %}</div></section>{% endif %}
+</div>
+{% endblock %}

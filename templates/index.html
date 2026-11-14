@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% from "_macros.html" import card with context %}
+{% block content %}
+<div class="container">
+{% if hero %}
+<section class="tp-hero my-4">
+  <div class="row g-4 align-items-center">
+    <div class="col-lg-7">
+      <a class="tp-kicker" href="/{{ hero.cat }}/">{{ hero.category_name }}</a>
+      <h1 class="display-5 tp-serif mt-2"><a href="{{ hero.url }}" class="text-reset text-decoration-none">{{ hero.title }}</a></h1>
+      <p class="lead text-secondary">{{ hero.description }}</p>
+      <p class="small text-secondary">{{ hero.author }} · {{ hero.published|datefmt }} · {{ hero.reading_time }} min read</p>
+      <a class="btn btn-accent" href="{{ hero.url }}">Read article <i class="bi bi-arrow-right"></i></a>
+    </div>
+    <div class="col-lg-5">
+      {% if hero.image %}<img src="{{ hero.image }}" alt="{{ hero.image_alt }}" class="img-fluid rounded-3" width="800" height="450">
+      {% else %}<div class="tp-ph tp-hero-ph tp-{{ hero.cat }}"><i class="bi {{ categories[hero.cat].icon }}"></i></div>{% endif %}
+    </div>
+  </div>
+</section>
+{% else %}
+<section class="my-5 text-center"><h1 class="tp-serif">Welcome to TechPuro</h1><p class="text-secondary">Add Markdown files to <code>content/</code> to publish articles.</p></section>
+{% endif %}
+
+{% if featured %}<section class="my-5"><h2 class="tp-h2">Featured</h2>
+  <div class="row g-4">{% for a in featured %}<div class="col-md-6 col-lg-4">{{ card(a) }}</div>{% endfor %}</div></section>{% endif %}
+
+{% for slug, c in categories.items() %}{% if sections[slug] %}
+<section class="my-5">
+  <div class="d-flex justify-content-between align-items-end"><h2 class="tp-h2"><i class="bi {{ c.icon }} me-2"></i>{{ c.name }}</h2><a href="/{{ slug }}/" class="small">View all</a></div>
+  <div class="row g-4">{% for a in sections[slug] %}<div class="col-md-6 col-lg-4">{{ card(a) }}</div>{% endfor %}</div>
+</section>{% endif %}{% endfor %}
+
+{% if latest %}<section class="my-5"><h2 class="tp-h2">Latest articles</h2>
+  <div class="row g-4">{% for a in latest %}<div class="col-md-6 col-lg-4">{{ card(a) }}</div>{% endfor %}</div></section>{% endif %}
+
+<div class="row g-4 my-5">
+  {% if trending %}<section class="col-lg-6"><h2 class="tp-h2">Trending</h2>
+    <ol class="tp-list">{% for a in trending %}<li><a href="{{ a.url }}">{{ a.title }}</a></li>{% endfor %}</ol></section>{% endif %}
+  {% if updated %}<section class="col-lg-6"><h2 class="tp-h2">Recently updated</h2>
+    <ul class="tp-list">{% for a in updated %}<li><a href="{{ a.url }}">{{ a.title }}</a> <span class="small text-secondary">· {{ a.updated|datefmt }}</span></li>{% endfor %}</ul></section>{% endif %}
+</div>
+</div>
+{% endblock %}
