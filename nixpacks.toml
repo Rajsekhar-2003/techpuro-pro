@@ -10,4 +10,4 @@ cmds = [
 ]
 
 [start]
-cmd = "gunicorn --bind 0.0.0.0:8000 --timeout 120 wsgi:app"
+cmd = "gunicorn --bind 0.0.0.0:3000 --timeout 120 wsgi:app"
